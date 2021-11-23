@@ -8,9 +8,9 @@ import type {
 import {Box, Button, Flex} from '@chakra-ui/react';
 import CanvasDraw from 'react-canvas-draw';
 import {useRef, useState} from 'react';
-import {connectToDatabase} from '../../../database/connect';
+import {connectToDatabase} from '../../database/connect';
 import {ParsedUrlQuery} from 'querystring';
-import {DrawingData} from '../../../types';
+import {DrawingData} from '../../types';
 import {ObjectId} from 'mongodb';
 
 interface DrawingProps {
