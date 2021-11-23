@@ -27,7 +27,7 @@ export default function Drawing(props: DrawingProps) {
   return (
     <Flex justifyContent="center">
       <Box>
-        <CanvasDraw ref={canvasRef} />
+        <CanvasDraw disabled ref={canvasRef} />
         <Flex mt={10} justifyContent="center">
           <Button colorScheme="green" onClick={handlePlay}>
             Start Playback
