@@ -28,6 +28,7 @@ import {
   Box,
   Stack,
   Text,
+  Heading,
 } from '@chakra-ui/react';
 import Color from 'color';
 
@@ -110,54 +111,59 @@ const Draw: NextPage = () => {
 
   return (
     <>
-      <form onSubmit={getSavedData}>
-        <Flex justifyContent="center">
-          <Box id="canvas-box" borderWidth={1} borderColor="black">
-            <CanvasDraw
-              ref={canvasRef}
-              brushRadius={brushRadius}
-              brushColor={brushColor}
-              catenaryColor={Color(brushColor).negate().hex()}
-              // @ts-ignore
-              enablePanAndZoom={true}
-              canvasHeight={400}
-              canvasWidth={400}
-              disabled={submitting}
-            />
-          </Box>
-        </Flex>
-        <Flex justifyContent="center">
-          <Stack mt={6} mb={6} direction="row" spacing={4}>
-            <Button shadow="xl" onClick={undo}>
-              Undo
-            </Button>
-            <Button shadow="xl" onClick={eraseAll}>
-              Erase All
-            </Button>
-            <Button shadow="xl" onClick={reset}>
-              Reset Position
-            </Button>
+      <Heading textAlign="center" as="h1">
+        Draw Your Masterpiece
+      </Heading>
+      <Box mt={10}>
+        <form onSubmit={getSavedData}>
+          <Flex justifyContent="center">
+            <Box id="canvas-box" borderWidth={1} borderColor="black">
+              <CanvasDraw
+                ref={canvasRef}
+                brushRadius={brushRadius}
+                brushColor={brushColor}
+                catenaryColor={Color(brushColor).negate().hex()}
+                // @ts-ignore
+                enablePanAndZoom={true}
+                canvasHeight={400}
+                canvasWidth={400}
+                disabled={submitting}
+              />
+            </Box>
+          </Flex>
+          <Flex justifyContent="center">
+            <Stack mt={6} mb={6} direction="row" spacing={4}>
+              <Button shadow="xl" onClick={undo}>
+                Undo
+              </Button>
+              <Button shadow="xl" onClick={eraseAll}>
+                Erase All
+              </Button>
+              <Button shadow="xl" onClick={reset}>
+                Reset Position
+              </Button>
+              <Button
+                colorScheme="pink"
+                shadow="xl"
+                onClick={clear}
+                variant="outline"
+              >
+                Clear
+              </Button>
+            </Stack>
+          </Flex>
+          <Flex justifyContent="center">
             <Button
-              colorScheme="pink"
+              isLoading={submitting}
+              type="submit"
               shadow="xl"
-              onClick={clear}
-              variant="outline"
+              colorScheme="green"
             >
-              Clear
+              Save To Gallery
             </Button>
-          </Stack>
-        </Flex>
-        <Flex justifyContent="center">
-          <Button
-            isLoading={submitting}
-            type="submit"
-            shadow="xl"
-            colorScheme="green"
-          >
-            Save To Gallery
-          </Button>
-        </Flex>
-      </form>
+          </Flex>
+        </form>
+      </Box>
 
       <Box mt={10}>
         <Text fontWeight="bold" fontSize="lg" align="center">
