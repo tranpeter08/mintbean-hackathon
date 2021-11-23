@@ -13,12 +13,6 @@ import {
   useState,
   useRef,
 } from 'react';
-import {
-  useEthers,
-  useEtherBalance,
-  useTokenBalance,
-  ChainId,
-} from '@usedapp/core';
 import axios from 'axios';
 import CanvasDraw from 'react-canvas-draw';
 import {
