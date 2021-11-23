@@ -14,29 +14,11 @@ import {
   useRef,
 } from 'react';
 import axios from 'axios';
-import CanvasDraw from 'react-canvas-draw';
-import {
-  Input,
-  Button,
-  NumberInput,
-  Flex,
-  NumberInputField,
-  SliderFilledTrack,
-  SliderThumb,
-  Slider,
-  SliderTrack,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  NumberInputStepper,
-  Box,
-  Stack,
-  Text,
-  Grid,
-  Heading,
-} from '@chakra-ui/react';
+import {Grid, Heading} from '@chakra-ui/react';
 import {connectToDatabase} from '../database/connect';
-import {DrawingData, PenData} from '../types';
+import {DrawingData} from '../types';
 import DrawingCard from '../components/DrawingCard';
+import {settings} from '../config/settings';
 
 interface HomeProps {
   drawings: [DrawingData];
@@ -48,8 +30,7 @@ const Home = (props: HomeProps) => {
   return (
     <>
       <Head>
-        <meta name="description" content="So much cool products" />
-        <title>See the latest drawings - MintBean Hackathon</title>
+        <title>Drawing Gallery - {settings.siteName}</title>
       </Head>
       <Heading textAlign="center" as="h1">
         Recent Drawings
@@ -90,10 +71,9 @@ export const getStaticProps: GetStaticProps = async () => {
 
     const drawings = JSON.parse(JSON.stringify(results));
 
-    console.log({drawings});
-
     return {
       props: {drawings},
+      revalidate: 30,
     };
   } catch (error) {
     console.log(error);
