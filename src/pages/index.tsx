@@ -96,8 +96,9 @@ export const getStaticProps: GetStaticProps = async () => {
       props: {drawings},
     };
   } catch (error) {
+    console.log(error);
     return {
-      props: {},
+      props: {drawings: []},
     };
   }
 };
