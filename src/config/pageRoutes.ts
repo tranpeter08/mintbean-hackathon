@@ -12,10 +12,6 @@ export const pageRoutes: PageRoutes = {
     href: '/',
     name: 'Home',
   },
-  // createPoll: {
-  //   href: '/create-poll',
-  //   name: 'Create Poll',
-  // },
   draw: {
     href: '/draw',
     name: 'Draw',
