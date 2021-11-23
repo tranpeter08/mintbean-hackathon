@@ -65,6 +65,7 @@ const Draw: NextPage = () => {
   function eraseAll() {
     const canvas: any = canvasRef.current;
     if (canvas instanceof CanvasDraw) {
+      // @ts-ignore
       canvas.eraseAll();
     }
   }
@@ -72,6 +73,7 @@ const Draw: NextPage = () => {
   function reset() {
     const canvas: any = canvasRef.current;
     if (canvas instanceof CanvasDraw) {
+      // @ts-ignore
       canvas.resetView();
     }
   }
@@ -84,7 +86,9 @@ const Draw: NextPage = () => {
       if (canvas instanceof CanvasDraw) {
         setSubmitting(true);
         const penData = canvas.getSaveData();
-        const dataUrl = canvas.getDataURL();
+
+        // @ts-ignore
+        const dataUrl = canvas?.getDataURL();
         const form = new FormData();
 
         form.append('file', dataUrl);
@@ -114,6 +118,7 @@ const Draw: NextPage = () => {
               brushRadius={brushRadius}
               brushColor={brushColor}
               catenaryColor={Color(brushColor).negate().hex()}
+              // @ts-ignore
               enablePanAndZoom={true}
               canvasHeight={400}
               canvasWidth={400}

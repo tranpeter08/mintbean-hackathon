@@ -1,7 +1,7 @@
 import type {NextApiRequest, NextApiResponse} from 'next';
 import Cloudinary from 'cloudinary';
 import formidable from 'formidable';
-import {connectToDatabase} from '../../database/mongodb';
+import {connectToDatabase} from '../../database/connect';
 
 export default async function upload(
   req: NextApiRequest,

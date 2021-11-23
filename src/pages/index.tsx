@@ -34,7 +34,7 @@ import {
   Grid,
   Heading,
 } from '@chakra-ui/react';
-import {connectToDatabase} from '../database/mongodb';
+import {connectToDatabase} from '../database/connect';
 import {DrawingData, PenData} from '../types';
 import DrawingCard from '../components/DrawingCard';
 
