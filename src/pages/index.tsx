@@ -90,6 +90,8 @@ export const getStaticProps: GetStaticProps = async () => {
 
     const drawings = JSON.parse(JSON.stringify(results));
 
+    console.log({drawings});
+
     return {
       props: {drawings},
     };
