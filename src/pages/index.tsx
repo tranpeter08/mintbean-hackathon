@@ -63,16 +63,17 @@ const Home = (props: HomeProps) => {
         }}
         gap={6}
       >
-        {drawings.map((drawing, index) => {
-          return (
-            <DrawingCard
-              key={drawing._id}
-              src={drawing.url}
-              alt={`drawing #${index + 1}`}
-              id={drawing._id}
-            />
-          );
-        })}
+        {drawings &&
+          drawings.map((drawing, index) => {
+            return (
+              <DrawingCard
+                key={drawing._id}
+                src={drawing.url}
+                alt={`drawing #${index + 1}`}
+                id={drawing._id}
+              />
+            );
+          })}
       </Grid>
     </>
   );
