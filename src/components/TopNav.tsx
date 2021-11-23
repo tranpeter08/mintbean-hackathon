@@ -29,20 +29,21 @@ export default function TopNav() {
   return (
     <>
       <nav className="top-nav">
-        <Flex padding={5}>
-          <Box>
-            <NextLink href="/">
-              <a>Logo</a>
-            </NextLink>
-          </Box>
+        <Flex justifyContent="center">
+          <Flex width="100%" maxWidth={600} padding={5}>
+            <Box>
+              <NextLink href="/">
+                <a>Logo</a>
+              </NextLink>
+            </Box>
 
-          <Spacer />
+            <Spacer />
 
-          <Stack alignItems="center" direction={{base: 'column', md: 'row'}}>
-            {NavLinks}
-          </Stack>
+            <Stack alignItems="center" direction={{base: 'column', md: 'row'}}>
+              {NavLinks}
+            </Stack>
 
-          {/* <Button
+            {/* <Button
             p={2}
             display={{base: 'inline-block', md: 'none'}}
             leftIcon={<HamburgerIcon />}
@@ -50,6 +51,7 @@ export default function TopNav() {
           >
             Menu
           </Button> */}
+          </Flex>
         </Flex>
       </nav>
     </>
