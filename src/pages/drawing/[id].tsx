@@ -1,15 +1,8 @@
-import type {
-  NextPage,
-  GetStaticProps,
-  GetStaticPaths,
-  GetServerSideProps,
-  GetStaticPropsContext,
-} from 'next';
-import {Box, Button, Flex} from '@chakra-ui/react';
+import type {GetStaticProps, GetStaticPaths, GetStaticPropsContext} from 'next';
+import {Box, Button, Flex, Heading} from '@chakra-ui/react';
 import CanvasDraw from 'react-canvas-draw';
 import {useRef, useState} from 'react';
 import {connectToDatabase} from '../../database/connect';
-import {ParsedUrlQuery} from 'querystring';
 import {DrawingData} from '../../types';
 import {ObjectId} from 'mongodb';
 
@@ -25,16 +18,23 @@ export default function Drawing(props: DrawingProps) {
   }
 
   return (
-    <Flex justifyContent="center">
-      <Box>
-        <CanvasDraw disabled ref={canvasRef} />
-        <Flex mt={10} justifyContent="center">
-          <Button colorScheme="green" onClick={handlePlay}>
-            Start Playback
-          </Button>
-        </Flex>
-      </Box>
-    </Flex>
+    <>
+      <Heading mt={10} textAlign="center" as="h1">
+        Drawing Playback
+      </Heading>
+      <Flex mt={10} justifyContent="center">
+        <Box>
+          <Box shadow="2xl">
+            <CanvasDraw disabled ref={canvasRef} />
+          </Box>
+          <Flex mt={10} justifyContent="center">
+            <Button colorScheme="green" onClick={handlePlay}>
+              Start Playback
+            </Button>
+          </Flex>
+        </Box>
+      </Flex>
+    </>
   );
 }
 
