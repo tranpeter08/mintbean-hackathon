@@ -23,4 +23,9 @@ a {
 
 .content {
   flex: 1;
+  background-color: #edf2f7;
+}
+
+footer {
+  background-color: black;
 }
