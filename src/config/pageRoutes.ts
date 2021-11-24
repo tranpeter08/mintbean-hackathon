@@ -1,12 +1,3 @@
-// interface PageData {
-//   href: string;
-//   name: string;
-// }
-
-// interface PageRoutes {
-//   [key: string]: PageData;
-// }
-
 export const pageRoutes = {
   home: {
     href: '/',
