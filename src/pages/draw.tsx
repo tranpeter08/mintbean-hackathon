@@ -102,6 +102,7 @@ const Draw: NextPage = () => {
         });
 
         setSubmitting(false);
+        clear();
       }
     } catch (error: any) {
       setSubmitting(false);
@@ -111,15 +112,16 @@ const Draw: NextPage = () => {
 
   return (
     <>
-      <Heading textAlign="center" as="h1">
+      <Heading mt={10} textAlign="center" as="h1">
         Draw Your Masterpiece
       </Heading>
       <Box mt={10}>
         <form onSubmit={getSavedData}>
-          <Flex justifyContent="center">
-            <Box id="canvas-box" borderWidth={1} borderColor="black">
+          <Flex id="canvas-container" justifyContent="center">
+            <Box id="canvas-box" borderWidth={1} shadow="xl">
               <CanvasDraw
                 ref={canvasRef}
+                lazyRadius={2}
                 brushRadius={brushRadius}
                 brushColor={brushColor}
                 catenaryColor={Color(brushColor).negate().hex()}
@@ -132,96 +134,106 @@ const Draw: NextPage = () => {
             </Box>
           </Flex>
           <Flex justifyContent="center">
-            <Stack mt={6} mb={6} direction="row" spacing={4}>
-              <Button shadow="xl" onClick={undo}>
+            <Stack mt={6} direction="row" spacing={4}>
+              <Button colorScheme="blue" shadow="xl" onClick={undo}>
                 Undo
               </Button>
-              <Button shadow="xl" onClick={eraseAll}>
+              <Button colorScheme="blue" shadow="xl" onClick={eraseAll}>
                 Erase All
               </Button>
-              <Button shadow="xl" onClick={reset}>
+              <Button colorScheme="blue" shadow="xl" onClick={reset}>
                 Reset Position
-              </Button>
-              <Button
-                colorScheme="pink"
-                shadow="xl"
-                onClick={clear}
-                variant="outline"
-              >
-                Clear
               </Button>
             </Stack>
           </Flex>
+          <Flex mt={6} justifyContent="center">
+            <Button
+              colorScheme="pink"
+              shadow="xl"
+              onClick={clear}
+              variant="outline"
+            >
+              Clear
+            </Button>
+          </Flex>
+
           <Flex justifyContent="center">
+            <Stack direction={{base: 'column', md: 'row'}}>
+              <Box>
+                <Text mt={10} fontWeight="bold" fontSize="lg" align="center">
+                  Brush Color
+                </Text>
+                <Flex mt={4} justifyContent="center">
+                  <Input
+                    aria-label="Brush Color"
+                    type="color"
+                    onChange={handleColor}
+                    width={16}
+                    boxSize={20}
+                    padding={2}
+                    backgroundColor="white"
+                  />
+                </Flex>
+              </Box>
+
+              <Box>
+                <Text mt={10} fontWeight="bold" fontSize="lg" align="center">
+                  Brush Radius
+                </Text>
+                <Flex mt={4} justifyContent="center" alignItems="center">
+                  <NumberInput
+                    id="brush-radius-input"
+                    maxW="100px"
+                    mr={2}
+                    value={brushRadius}
+                    onChange={handleBrushRadius}
+                    step={0.01}
+                    precision={2}
+                    min={0.01}
+                    max={50}
+                    backgroundColor="white"
+                  >
+                    <NumberInputField width={20} aria-label="Brush Radius" />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+
+                  <Slider
+                    id="brush-radius-slider"
+                    focusThumbOnChange={false}
+                    value={brushRadius}
+                    onChange={handleBrushRadiusSlider}
+                    step={0.01}
+                    min={0.01}
+                    max={60}
+                    width={200}
+                  >
+                    <SliderTrack bgColor="white">
+                      <SliderFilledTrack />
+                    </SliderTrack>
+                    <SliderThumb aria-label="Brush Radius" p={5}>
+                      <Text fontSize="sm">{brushRadius}</Text>
+                    </SliderThumb>
+                  </Slider>
+                </Flex>
+              </Box>
+            </Stack>
+          </Flex>
+
+          <Flex mt={10} justifyContent="center">
             <Button
               isLoading={submitting}
               type="submit"
               shadow="xl"
               colorScheme="green"
+              mb={10}
             >
               Save To Gallery
             </Button>
           </Flex>
         </form>
-      </Box>
-
-      <Box mt={10}>
-        <Text fontWeight="bold" fontSize="lg" align="center">
-          Brush Color
-        </Text>
-        <Flex justifyContent="center">
-          <Input
-            aria-label="Brush Color"
-            type="color"
-            onChange={handleColor}
-            width={20}
-            height={20}
-            padding={2}
-          />
-        </Flex>
-      </Box>
-
-      <Box mt={10}>
-        <Text fontWeight="bold" fontSize="lg" align="center">
-          Brush Radius
-        </Text>
-        <Flex justifyContent="center">
-          <NumberInput
-            id="brush-radius-input"
-            maxW="100px"
-            mr="2rem"
-            value={brushRadius}
-            onChange={handleBrushRadius}
-            step={0.01}
-            precision={2}
-            min={0.01}
-            max={60}
-          >
-            <NumberInputField aria-label="Brush Radius" />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-
-          <Slider
-            id="brush-radius-slider"
-            focusThumbOnChange={false}
-            value={brushRadius}
-            onChange={handleBrushRadiusSlider}
-            step={0.01}
-            min={0.01}
-            max={60}
-            maxWidth={400}
-          >
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb aria-label="Brush Radius" p={5}>
-              <Text fontSize="sm">{brushRadius}</Text>
-            </SliderThumb>
-          </Slider>
-        </Flex>
       </Box>
     </>
   );
