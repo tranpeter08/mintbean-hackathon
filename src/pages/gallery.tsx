@@ -7,6 +7,7 @@ import { DrawingData } from '../types';
 import DrawingCard from '../components/DrawingCard';
 import SignupMessage from '../components/SignupMessage';
 import { settings } from '../config/settings';
+import DrawingService from '../api-lib/services/DrawingService';
 
 interface HomeProps {
   drawings: [DrawingData];
@@ -67,13 +68,8 @@ const Gallery: NextPage<HomeProps> = ({ drawings }) => {
 export const getStaticProps: GetStaticProps = async () => {
   try {
     const { db } = await connectToDatabase();
-    const results = await db
-      .collection('drawings')
-      .find({}, { limit: 100 })
-      .project({ _id: true, url: true })
-      .toArray();
-
-    const drawings = JSON.parse(JSON.stringify(results));
+    const drawingService = new DrawingService(db);
+    const drawings = await drawingService.getRecentDrawings();
 
     return {
       props: { drawings },
