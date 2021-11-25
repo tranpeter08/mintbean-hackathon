@@ -11,7 +11,6 @@ import {
   StatNumber,
   Text,
 } from '@chakra-ui/react';
-import { count } from 'console';
 
 interface ProfileProps {
   user: { email: string };
@@ -27,19 +26,20 @@ interface ProfileProps {
 
 export default function Profile(props: ProfileProps) {
   const { user, drawings } = props;
-  const drawingCount = drawings.length;
+  const drawingCount = Array.isArray(drawings) ? drawings.length : 0;
   const hasDrawings = drawingCount > 0;
 
-  console.log(props);
+  const drawingCards =
+    drawingCount &&
+    drawings.map(({ _id, url }) => (
+      <DrawingCard
+        key={_id}
+        id={_id}
+        src={url}
+        alt={`${user.email}'s drawing'`}
+      />
+    ));
 
-  const drawingCards = drawings.map(({ _id, url }) => (
-    <DrawingCard
-      key={_id}
-      id={_id}
-      src={url}
-      alt={`${user.email}'s drawing'`}
-    />
-  ));
   return (
     <>
       <Box p={5}>
@@ -91,7 +91,7 @@ export default function Profile(props: ProfileProps) {
 export const getServerSideProps = withPageAuthRequired({
   returnTo: '/',
   async getServerSideProps({ req, res }) {
-    const props = {};
+    const props = { drawings: [] };
     try {
       const { user } = getSession(req, res);
       const { db } = await connectToDatabase();
