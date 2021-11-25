@@ -10,6 +10,7 @@ import {
   Button,
   Flex,
   GridItem,
+  Link,
 } from '@chakra-ui/react';
 import { ArrowUpIcon } from '@chakra-ui/icons';
 import CanvasDraw from 'react-canvas-draw';
@@ -28,7 +29,7 @@ const Home = (props: HomeProps) => {
 
   useEffect(() => {
     playbackDrawing();
-  }, []);
+  });
 
   function playbackDrawing() {
     canvasRef.current?.loadSaveData(props.drawing.penData);
@@ -79,7 +80,7 @@ const Home = (props: HomeProps) => {
                       colorScheme='yellow'
                       aria-describedby='button-helper-text'
                     >
-                      Signup Today
+                      <Link href='/api/auth/login'>Signup Today</Link>
                     </Button>
                     <Text
                       marginTop={1}
