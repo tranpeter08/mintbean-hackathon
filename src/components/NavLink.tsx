@@ -31,7 +31,7 @@ export default function NavLink({
 
   if (auth)
     return (
-      <Box p={3}>
+      <Box p={2}>
         <Link
           href={href}
           onClick={handleClick}
@@ -46,7 +46,7 @@ export default function NavLink({
     );
 
   return (
-    <Box p={3}>
+    <Box p={2}>
       <NextLink href={href} passHref>
         <Link
           onClick={handleClick}
