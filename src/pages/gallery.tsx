@@ -10,6 +10,8 @@ import {
   useToast,
   Spinner,
   CircularProgress,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react';
 import { DrawingData } from '../types';
 import DrawingCard from '../components/DrawingCard';
@@ -40,13 +42,8 @@ const Gallery: NextPage = () => {
       setLoading(false);
     } catch (error) {
       console.error(error.message);
-      toast({
-        isClosable: true,
-        status: 'error',
-        title: 'Error',
-        description: 'Error getting drawings, try again later',
-        duration: 5000,
-      });
+      setError(error.message);
+      setLoading(false);
     }
   }
 
@@ -92,7 +89,18 @@ const Gallery: NextPage = () => {
           </Box>
         )}
 
-        {!loading && !hasDrawings && (
+        {!loading && error && (
+          <Flex padding={10} justifyContent='center'>
+            <Box width='100%' maxWidth={600}>
+              <Alert status='error'>
+                <AlertIcon />
+                Could not get drawings. Try again later...
+              </Alert>
+            </Box>
+          </Flex>
+        )}
+
+        {!loading && !error && !hasDrawings && (
           <Box mt={20}>
             <SignupMessage />
           </Box>
