@@ -15,7 +15,7 @@ export interface PollPayload {
 export interface DrawingData {
   _id: string;
   url: string;
-  penDataJSON: string;
+  penData: string;
 }
 
 export interface PenData {
