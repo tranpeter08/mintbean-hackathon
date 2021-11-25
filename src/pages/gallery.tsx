@@ -66,22 +66,21 @@ const Gallery: NextPage<HomeProps> = ({ drawings }) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
+  const props = { drawings: [] };
   try {
     const { db } = await connectToDatabase();
     const drawingService = new DrawingService(db);
     const drawings = await drawingService.getRecentDrawings();
 
-    return {
-      props: { drawings },
-      revalidate: 30,
-    };
+    props.drawings = drawings;
   } catch (error) {
-    console.log(error);
-    return {
-      props: { drawings: [], error: { message: error.message } },
-      revalidate: 30,
-    };
+    props['error'] = { message: error.message };
   }
+
+  return {
+    props,
+    revalidate: 15,
+  };
 };
 
 export default Gallery;
