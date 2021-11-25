@@ -3,8 +3,8 @@ import NextLink from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { pageRoutes } from '../config/pageRoutes';
-import { Button, Flex, Stack, Link, Box } from '@chakra-ui/react';
-import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { Button, Flex, Stack, Link, Box, Text, Spacer } from '@chakra-ui/react';
+import { CloseIcon } from '@chakra-ui/icons';
 import { useState, createContext } from 'react';
 import { useUser } from '@auth0/nextjs-auth0';
 
@@ -50,18 +50,27 @@ export default function TopNav() {
       <TopNavCtx.Provider value={{ toggleResponsiveMenu, showMenu }}>
         <nav className='top-nav'>
           <Flex justifyContent='center'>
-            <Flex
-              justifyContent='center'
-              width='100%'
-              maxWidth={600}
-              padding={5}
-            >
+            <Flex width='100%' maxWidth={600} padding={5}>
+              {/* Logo */}
+              <Stack direction='row' alignItems='center'>
+                <Image
+                  height={40}
+                  width={40}
+                  layout='fixed'
+                  src='/noun_brush.png'
+                />
+                <Text fontSize={20} fontWeight='bold'>
+                  Match Strokes
+                </Text>
+              </Stack>
+
+              <Spacer />
               {/* Desktop Menu */}
 
               <Stack
                 alignItems='center'
                 direction='row'
-                display={{ base: 'none', sm: 'flex' }}
+                display={{ base: 'none', md: 'flex' }}
               >
                 {NavLinks}
 
@@ -106,15 +115,17 @@ export default function TopNav() {
                 position='fixed'
                 direction='column'
                 overflowY='auto'
-                display={{ base: showMenu ? 'flex' : 'none', sm: 'none' }}
+                display={{ base: showMenu ? 'flex' : 'none', md: 'none' }}
               >
                 <Flex p={6} justify='flex-end'>
-                  <Button
-                    onClick={toggleResponsiveMenu}
-                    leftIcon={<CloseIcon />}
-                  >
-                    Close
-                  </Button>
+                  <Flex width='100%' maxWidth={600} justify='flex-end'>
+                    <Button
+                      onClick={toggleResponsiveMenu}
+                      leftIcon={<CloseIcon />}
+                    >
+                      Close
+                    </Button>
+                  </Flex>
                 </Flex>
                 <Stack spacing={6} direction='column' alignItems='center'>
                   {NavLinks}
@@ -136,10 +147,10 @@ export default function TopNav() {
               </Stack>
 
               <Button
-                p={2}
-                display={{ base: 'inline-block', sm: 'none' }}
-                leftIcon={<HamburgerIcon />}
+                display={{ md: 'none' }}
                 onClick={toggleResponsiveMenu}
+                variant='outline'
+                alignItems='center'
               >
                 Menu
               </Button>
