@@ -29,3 +29,22 @@ a {
 footer {
   background-color: black;
 }
+
+#tech-stack-section {
+  background-color: #1a365d;
+  padding-top: 10px;
+}
+
+.profile-img {
+  border-radius: 50%;
+}
+
+@media (max-width: 420px) {
+  .canvas canvas {
+    width: 360px !important;
+  }
+
+  .canvas {
+    width: 360px !important;
+  }
+}
