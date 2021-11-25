@@ -88,7 +88,7 @@ const Home = (props: HomeProps) => {
                       id='button-helper-text'
                     >
                       <ArrowUpIcon />
-                      It's free!
+                      It&apos;s free!
                     </Text>
                   </Flex>
                 </Flex>
@@ -208,9 +208,10 @@ const Home = (props: HomeProps) => {
                     Quality Assurance Technician. After experiencing a back
                     injury in 2018, I decided to pivot to a different career
                     path. I then attended a coding boot camp where I discovered
-                    my passion for coding. I haven't stopped coding since. I'm a
-                    natural problem solver and love learning. Outside of coding,
-                    I am a motorcycle enthusiast and an avid BBQ'er.
+                    my passion for coding. I haven&apos;t stopped coding since.
+                    I&apos;m a natural problem solver and love learning. Outside
+                    of coding, I am a motorcycle enthusiast and an avid
+                    BBQ&apos;er.
                   </Text>
                 </Flex>
               </GridItem>
