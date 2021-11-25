@@ -45,6 +45,7 @@ export default class DrawingService {
 
   async getDrawingsByEmail(email) {
     const fields = { ...this.defaultfields, penData: false };
+    delete fields.penData;
     const results = await this.db
       .collection(this.drawingCollection)
       .find({ email })
