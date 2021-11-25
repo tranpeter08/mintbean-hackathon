@@ -11,18 +11,16 @@ export default class DrawingService {
     this.db = db;
   }
 
-  async getDrawings() {
+  async getRecentDrawings() {
     const results = await this.db
       .collection(this.drawingCollection)
       .find({})
       .sort({ _id: -1 })
-      .limit(48)
-      .project({ _id: true, url: true, penDataJson: true })
+      .limit(50)
+      .project(this.defaultfields)
       .toArray();
 
-    const drawings: DrawingData = JSON.parse(JSON.stringify(results));
-
-    return drawings;
+    return results;
   }
 
   async createDrawing({ email, penData, url }) {
