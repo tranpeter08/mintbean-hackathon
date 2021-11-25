@@ -1,19 +1,18 @@
-import type {NextPage, GetStaticProps} from 'next';
+import type { NextPage, GetStaticProps, GetStaticPropsResult } from 'next';
 import NextLink from 'next/link';
 import Head from 'next/head';
-import {Grid, Heading, Box, Flex, Link, Text} from '@chakra-ui/react';
-import {connectToDatabase} from '../database/connect';
-import {DrawingData} from '../types';
+import { Grid, Heading, Box, Flex, Link, Text } from '@chakra-ui/react';
+import { connectToDatabase } from '../database/connect';
+import { DrawingData } from '../types';
 import DrawingCard from '../components/DrawingCard';
 import SignupMessage from '../components/SignupMessage';
-import {settings} from '../config/settings';
-import {pageRoutes} from '../config/pageRoutes';
+import { settings } from '../config/settings';
 
 interface HomeProps {
   drawings: [DrawingData];
 }
 
-const Gallery: NextPage<HomeProps> = ({drawings}) => {
+const Gallery: NextPage<HomeProps> = ({ drawings }) => {
   const drawingCards = drawings.map((drawing) => {
     return (
       <DrawingCard
@@ -32,7 +31,7 @@ const Gallery: NextPage<HomeProps> = ({drawings}) => {
       <Head>
         <title>Art Gallery - {settings.siteName}</title>
       </Head>
-      <Heading mt={10} textAlign="center" as="h1">
+      <Heading mt={10} textAlign='center' as='h1'>
         Art Gallery
       </Heading>
 
@@ -42,21 +41,21 @@ const Gallery: NextPage<HomeProps> = ({drawings}) => {
         </Box>
       )}
 
-      <Flex justifyContent="center">
+      <Flex justifyContent='center'>
         <Grid
           marginTop={10}
           marginBottom={10}
-          width="100%"
+          width='100%'
           maxWidth={1200}
           padding={6}
-          gap={{base: 5, sm: 7, md: 8, lg: 8}}
+          gap={{ base: 5, sm: 7, md: 8, lg: 8 }}
           templateColumns={{
             base: 'repeat(2, 1fr)',
             sm: 'repeat(3, 1fr)',
             md: 'repeat(4, 1fr)',
             lg: 'repeat(5, 1fr)',
           }}
-          justifyContent="center"
+          justifyContent='center'
         >
           {hasDrawings && drawingCards}
         </Grid>
@@ -67,23 +66,24 @@ const Gallery: NextPage<HomeProps> = ({drawings}) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
-    const {db} = await connectToDatabase();
+    const { db } = await connectToDatabase();
     const results = await db
       .collection('drawings')
-      .find({}, {limit: 100})
-      .project({_id: true, url: true})
+      .find({}, { limit: 100 })
+      .project({ _id: true, url: true })
       .toArray();
 
     const drawings = JSON.parse(JSON.stringify(results));
 
     return {
-      props: {drawings},
+      props: { drawings },
       revalidate: 30,
     };
   } catch (error) {
     console.log(error);
     return {
-      props: {drawings: [], error: {message: error.message}},
+      props: { drawings: [], error: { message: error.message } },
+      revalidate: 30,
     };
   }
 };
