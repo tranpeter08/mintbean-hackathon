@@ -35,10 +35,6 @@ footer {
   padding-top: 10px;
 }
 
-.profile-img {
-  border-radius: 50%;
-}
-
 @media (max-width: 420px) {
   .canvas canvas {
     width: 360px !important;
