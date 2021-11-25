@@ -11,8 +11,4 @@ export const pageRoutes = {
     href: '/draw',
     name: 'Draw',
   },
-  signup: {
-    href: '/signup',
-    name: 'Signup',
-  },
 };
