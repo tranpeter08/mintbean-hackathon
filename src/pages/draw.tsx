@@ -37,10 +37,8 @@ const Draw: NextPage = () => {
   const penDataKey = 'pen_data';
 
   function loadlocalPenData() {
-    console.log(canvasRef);
     const data = localStorage.getItem(penDataKey);
 
-    console.log({ data });
     if (typeof data !== 'string') return;
 
     try {
