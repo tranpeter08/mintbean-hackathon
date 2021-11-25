@@ -1,10 +1,14 @@
-import type {GetStaticProps, GetStaticPaths, GetStaticPropsContext} from 'next';
-import {Box, Button, Flex, Heading} from '@chakra-ui/react';
+import type {
+  GetStaticProps,
+  GetStaticPaths,
+  GetStaticPropsContext,
+} from 'next';
+import { Box, Button, Flex, Heading } from '@chakra-ui/react';
 import CanvasDraw from 'react-canvas-draw';
-import {useRef, useState} from 'react';
-import {connectToDatabase} from '../../database/connect';
-import {DrawingData} from '../../types';
-import {ObjectId} from 'mongodb';
+import { useRef, useState } from 'react';
+import { connectToDatabase } from '../../database/connect';
+import { DrawingData } from '../../types';
+import { ObjectId } from 'mongodb';
 
 interface DrawingProps {
   drawing: DrawingData;
@@ -19,16 +23,22 @@ export default function Drawing(props: DrawingProps) {
 
   return (
     <>
-      <Heading mt={10} textAlign="center" as="h1">
+      <Heading mt={10} textAlign='center' as='h1'>
         Drawing Playback
       </Heading>
-      <Flex mt={10} justifyContent="center">
+      <Flex mt={10} justifyContent='center'>
         <Box>
-          <Box shadow="2xl">
-            <CanvasDraw disabled ref={canvasRef} />
+          <Box shadow='2xl'>
+            <CanvasDraw
+              className='canvas'
+              hideInterface={true}
+              hideGrid={true}
+              disabled
+              ref={canvasRef}
+            />
           </Box>
-          <Flex mt={10} justifyContent="center">
-            <Button colorScheme="green" onClick={handlePlay}>
+          <Flex mt={10} justifyContent='center'>
+            <Button colorScheme='green' onClick={handlePlay}>
               Start Playback
             </Button>
           </Flex>
@@ -39,38 +49,38 @@ export default function Drawing(props: DrawingProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const {db} = await connectToDatabase();
+  const { db } = await connectToDatabase();
   const drawings = await db
     .collection('drawings')
-    .find({}, {limit: 100})
-    .project({_id: {$toString: '$_id'}})
+    .find({}, { limit: 100 })
+    .project({ _id: { $toString: '$_id' } })
     .toArray();
 
   const paths = drawings.map((drawing) => {
-    return {params: {id: drawing._id}};
+    return { params: { id: drawing._id } };
   });
 
-  return {paths, fallback: false};
+  return { paths, fallback: false };
 };
 
 export const getStaticProps: GetStaticProps = async (
   contex: GetStaticPropsContext
 ) => {
   try {
-    const {params} = contex;
+    const { params } = contex;
 
     if (typeof params?.id === 'undefined') throw 'no ID';
 
-    const {id} = params;
+    const { id } = params;
 
     if (Array.isArray(id)) throw 'invalid param';
 
     const _id = new ObjectId(id);
-    const {db} = await connectToDatabase();
+    const { db } = await connectToDatabase();
     const results = await db
       .collection('drawings')
-      .find({_id})
-      .project({penData: true})
+      .find({ _id })
+      .project({ penData: true })
       .toArray();
 
     return {
@@ -81,6 +91,15 @@ export const getStaticProps: GetStaticProps = async (
       },
     };
   } catch (error) {
-    return {props: {}};
+    const message = error.message;
+    console.log(message);
+    return {
+      props: {
+        drawing: {
+          penDataJSON: null,
+        },
+        error: { message },
+      },
+    };
   }
 };
