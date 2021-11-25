@@ -45,6 +45,9 @@ export default function TopNav() {
     name: 'Login',
   };
 
+  const loginSrc = isLoggedIn ? logoutProps.href : loginProps.href;
+  const loginName = isLoggedIn ? logoutProps.name : loginProps.name;
+
   for (const page in pageRoutes) {
     const { href, name } = pageRoutes[page];
     NavLinks.push(<NavLink key={name} href={href} name={name} />);
@@ -84,17 +87,13 @@ export default function TopNav() {
               >
                 {NavLinks}
 
-                {/* signup/login */}
+                {/* login/logout */}
                 {isLoading ? (
                   <Box p={2}>
                     <Spinner color='blue.500' />
                   </Box>
                 ) : (
-                  <NavLink
-                    href={isLoggedIn ? logoutProps.href : loginProps.href}
-                    name={isLoggedIn ? logoutProps.name : loginProps.name}
-                    auth={true}
-                  />
+                  <NavLink href={loginSrc} name={loginName} auth={true} />
                 )}
 
                 {/* profile */}
@@ -144,14 +143,8 @@ export default function TopNav() {
                 <Stack spacing={6} direction='column' alignItems='center'>
                   {NavLinks}
 
-                  {/* signup/login */}
-                  {
-                    <NavLink
-                      href={isLoggedIn ? logoutProps.href : loginProps.href}
-                      name={isLoggedIn ? logoutProps.name : loginProps.name}
-                      auth={true}
-                    />
-                  }
+                  {/* login/logout */}
+                  {<NavLink href={loginSrc} name={loginName} auth={true} />}
 
                   {/* profile */}
                   {isLoggedIn && (
