@@ -11,6 +11,7 @@ import {
   Flex,
   GridItem,
   Link,
+  Avatar,
 } from '@chakra-ui/react';
 import { ArrowUpIcon } from '@chakra-ui/icons';
 import CanvasDraw from 'react-canvas-draw';
@@ -74,22 +75,30 @@ const Home = (props: HomeProps) => {
                 </Text>
                 <Flex marginTop={10} justify='flex-end'>
                   <Flex justify='flex-start' direction='column'>
-                    <Button
-                      marginTop={2}
+                    <Link
+                      marginTop={20}
+                      paddingY={2}
+                      paddingX={4}
+                      backgroundColor='yellow.400'
+                      href='/api/auth/login'
                       fontSize={20}
-                      colorScheme='yellow'
-                      aria-describedby='button-helper-text'
+                      fontWeight='bold'
+                      borderRadius={10}
+                      shadow='lg'
+                      _hover={{
+                        textDecoration: 'none',
+                        backgroundColor: 'yellow.500',
+                      }}
                     >
-                      <Link href='/api/auth/login'>Signup Today</Link>
-                    </Button>
+                      Signup Today
+                    </Link>
                     <Text
-                      marginTop={1}
+                      marginTop={2}
                       marginLeft={2}
                       color='blue.500'
                       id='button-helper-text'
                     >
-                      <ArrowUpIcon />
-                      It&apos;s free!
+                      <ArrowUpIcon /> It&apos;s free!
                     </Text>
                   </Flex>
                 </Flex>
@@ -190,13 +199,7 @@ const Home = (props: HomeProps) => {
             >
               <GridItem colSpan={2}>
                 <Flex direction='column' alignItems='center'>
-                  <Image
-                    className='profile-img'
-                    src='/me.jpg'
-                    alt='Peter Tran'
-                    width={100}
-                    height={100}
-                  />
+                  <Avatar size='xl' name='Peter Tran' src='/me.jpg' />
                   <Heading as='h3' padding={4}>
                     Peter Tran
                   </Heading>
