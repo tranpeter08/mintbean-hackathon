@@ -3,19 +3,38 @@ import type {
   GetStaticPaths,
   GetStaticPropsContext,
 } from 'next';
-import { Box, Button, Flex, Heading } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, Spinner } from '@chakra-ui/react';
 import CanvasDraw from 'react-canvas-draw';
 import { useRef, useState } from 'react';
 import { connectToDatabase } from '../../database/connect';
 import { DrawingData } from '../../types';
 import { ObjectId } from 'mongodb';
 import DrawingServices from '../../api-lib/services/DrawingService';
+import { useRouter } from 'next/router';
 
 interface DrawingProps {
   drawing: DrawingData;
 }
 export default function Drawing(props: DrawingProps) {
   const canvasRef = useRef<CanvasDraw>(null);
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return (
+      <Flex>
+        <Flex>
+          <Heading>Loading Canvas....</Heading>
+          <Spinner
+            thickness='4px'
+            speed='0.65s'
+            emptyColor='gray.200'
+            color='blue.500'
+            size='xl'
+          />
+        </Flex>
+      </Flex>
+    );
+  }
 
   function handlePlay() {
     canvasRef.current?.loadSaveData(props.drawing.penData);
@@ -51,23 +70,33 @@ export default function Drawing(props: DrawingProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { db } = await connectToDatabase();
-  const drawingService = new DrawingServices(db);
-  const drawings = await drawingService.getRecentDrawings();
+  const paths = [];
 
-  const paths = drawings.map((drawing) => {
-    return { params: { id: drawing._id } };
-  });
+  try {
+    const { db } = await connectToDatabase();
+    const drawingService = new DrawingServices(db);
+    const drawings = await drawingService.getRecentDrawings();
 
-  return { paths, fallback: false };
+    for (const drawing of drawings) {
+      paths.push({ params: { id: drawing._id } });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return { paths, fallback: true };
 };
 
 export const getStaticProps: GetStaticProps = async (
   contex: GetStaticPropsContext
 ) => {
-  try {
-    const { params } = contex;
+  const props = {
+    drawing: null,
+  };
 
+  const { params } = contex;
+
+  try {
     if (typeof params?.id === 'undefined') throw 'no ID';
 
     const { id } = params;
@@ -78,23 +107,17 @@ export const getStaticProps: GetStaticProps = async (
     const drawingService = new DrawingServices(db);
     const results = await drawingService.getDrawingById(id);
 
-    return {
-      props: {
-        drawing: {
-          penData: results.penData,
-        },
-      },
+    props.drawing = {
+      penData: results.penData,
     };
   } catch (error) {
     const message = error.message;
     console.log(message);
-    return {
-      props: {
-        drawing: {
-          penData: null,
-        },
-        error: { message },
-      },
-    };
+    props['error'] = { message };
   }
+
+  return {
+    props,
+    revalidate: 10,
+  };
 };
