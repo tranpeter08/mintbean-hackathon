@@ -3,7 +3,16 @@ import NextLink from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { pageRoutes } from '../config/pageRoutes';
-import { Button, Flex, Stack, Link, Box, Text, Spacer } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Stack,
+  Link,
+  Box,
+  Text,
+  Spacer,
+  Spinner,
+} from '@chakra-ui/react';
 import { CloseIcon } from '@chakra-ui/icons';
 import { useState, createContext } from 'react';
 import { useUser } from '@auth0/nextjs-auth0';
@@ -58,6 +67,7 @@ export default function TopNav() {
                   width={40}
                   layout='fixed'
                   src='/noun_brush.png'
+                  alt='Match Strokes logo'
                 />
                 <Text fontSize={20} fontWeight='bold'>
                   Match Strokes
@@ -75,13 +85,17 @@ export default function TopNav() {
                 {NavLinks}
 
                 {/* signup/login */}
-                {
+                {isLoading ? (
+                  <Box p={2}>
+                    <Spinner color='blue.500' />
+                  </Box>
+                ) : (
                   <NavLink
                     href={isLoggedIn ? logoutProps.href : loginProps.href}
                     name={isLoggedIn ? logoutProps.name : loginProps.name}
                     auth={true}
                   />
-                }
+                )}
 
                 {/* profile */}
                 {isLoggedIn && (
