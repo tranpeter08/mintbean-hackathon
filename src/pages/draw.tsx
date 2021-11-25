@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import { ChangeEvent, useState, useRef, FormEvent } from 'react';
+import { ChangeEvent, useState, useRef, FormEvent, useEffect } from 'react';
 import axios from 'axios';
 import CanvasDraw from 'react-canvas-draw';
 import {
@@ -22,7 +22,6 @@ import {
   Link,
   useToast,
 } from '@chakra-ui/react';
-// import {AlertIcon} from '@chakra-ui/icons';
 import Color from 'color';
 import { useUser } from '@auth0/nextjs-auth0';
 
@@ -31,9 +30,50 @@ const Draw: NextPage = () => {
   const [brushColor, setbrushColor] = useState<string>('#000000');
   const [brushRadius, setBrushRadius] = useState<number>(12);
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [storedPenData, setStoredPenData] = useState<string>(null);
   const toast = useToast();
   const { user } = useUser();
   const isLoggedIn = typeof user !== 'undefined';
+  const penDataKey = 'pen_data';
+
+  function loadlocalPenData() {
+    console.log(canvasRef);
+    const data = localStorage.getItem(penDataKey);
+
+    console.log({ data });
+    if (typeof data !== 'string') return;
+
+    try {
+      canvasRef.current.loadSaveData(data);
+      localStorage.removeItem(penDataKey);
+    } catch (error) {
+      localStorage.removeItem(penDataKey);
+      toast({
+        title: 'Error',
+        description: 'Could not load previous drawing',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  }
+
+  function saveLocalPenData() {
+    try {
+      const penData = canvasRef.current.getSaveData();
+      localStorage.setItem(penDataKey, penData);
+    } catch (error) {
+      console.error(`Unable to save pen data`);
+    }
+  }
+
+  useEffect(() => {
+    loadlocalPenData();
+    return () => {
+      saveLocalPenData;
+    };
+  }, []);
 
   function handleColor(event: ChangeEvent<HTMLInputElement>) {
     setbrushColor(event.target.value);
@@ -107,7 +147,7 @@ const Draw: NextPage = () => {
           title: 'Succes!',
           description: 'Drawing saved.  It will appear in the gallery soon.',
           status: 'success',
-          duration: 5000,
+          duration: 3000,
           isClosable: true,
           position: 'top',
         });
@@ -119,11 +159,16 @@ const Draw: NextPage = () => {
         title: 'Error',
         description: 'Something went wrong. Drawing was not saved :(',
         status: 'error',
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
         position: 'top',
       });
     }
+  }
+
+  function redirectToLogin() {
+    saveLocalPenData();
+    window.location.assign('/api/auth/login');
   }
 
   return (
@@ -253,13 +298,9 @@ const Draw: NextPage = () => {
                 shadow='xl'
                 colorScheme='yellow'
                 mb={10}
+                onClick={redirectToLogin}
               >
-                <Link
-                  _hover={{ textDecoration: 'none' }}
-                  href='/api/auth/login'
-                >
-                  Login to save
-                </Link>
+                Login to save
               </Button>
             )}
           </Flex>
