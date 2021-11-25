@@ -1,15 +1,5 @@
-import type {NextPage} from 'next';
-import Head from 'next/head';
-import Image from 'next/image';
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  SyntheticEvent,
-  useEffect,
-  useState,
-  useRef,
-  FormEvent,
-} from 'react';
+import type { NextPage } from 'next';
+import { ChangeEvent, useState, useRef, FormEvent } from 'react';
 import axios from 'axios';
 import CanvasDraw from 'react-canvas-draw';
 import {
@@ -29,14 +19,21 @@ import {
   Stack,
   Text,
   Heading,
+  Link,
+  useToast,
 } from '@chakra-ui/react';
+// import {AlertIcon} from '@chakra-ui/icons';
 import Color from 'color';
+import { useUser } from '@auth0/nextjs-auth0';
 
 const Draw: NextPage = () => {
   const canvasRef = useRef(null);
   const [brushColor, setbrushColor] = useState<string>('#000000');
   const [brushRadius, setBrushRadius] = useState<number>(12);
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const toast = useToast();
+  const { user } = useUser();
+  const isLoggedIn = typeof user !== 'undefined';
 
   function handleColor(event: ChangeEvent<HTMLInputElement>) {
     setbrushColor(event.target.value);
@@ -81,6 +78,9 @@ const Draw: NextPage = () => {
 
   async function getSavedData(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!isLoggedIn) return;
+
     try {
       const canvas: any = canvasRef.current;
 
@@ -95,7 +95,7 @@ const Draw: NextPage = () => {
         form.append('file', dataUrl);
         form.append('penData', penData);
 
-        const {data} = await axios.post('/api/upload', form, {
+        const { data } = await axios.post('/api/upload', form, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -103,23 +103,40 @@ const Draw: NextPage = () => {
 
         setSubmitting(false);
         clear();
+        toast({
+          title: 'Succes!',
+          description: 'Drawing saved.  It will appear in the gallery soon.',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+          position: 'top',
+        });
       }
     } catch (error: any) {
       setSubmitting(false);
       console.log(error?.data);
+      toast({
+        title: 'Error',
+        description: 'Something went wrong. Drawing was not saved :(',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top',
+      });
     }
   }
 
   return (
     <>
-      <Heading mt={10} textAlign="center" as="h1">
+      <Heading mt={10} textAlign='center' as='h1'>
         Draw Your Masterpiece
       </Heading>
-      <Box mt={10}>
+      <Box paddingY={10}>
         <form onSubmit={getSavedData}>
-          <Flex id="canvas-container" justifyContent="center">
-            <Box id="canvas-box" borderWidth={1} shadow="xl">
+          <Flex id='canvas-container' justifyContent='center'>
+            <Box id='canvas-box' borderWidth={1} shadow='xl'>
               <CanvasDraw
+                className='canvas'
                 ref={canvasRef}
                 lazyRadius={2}
                 brushRadius={brushRadius}
@@ -133,67 +150,39 @@ const Draw: NextPage = () => {
               />
             </Box>
           </Flex>
-          <Flex justifyContent="center">
-            <Stack mt={6} direction="row" spacing={4}>
-              <Button colorScheme="blue" shadow="xl" onClick={undo}>
-                Undo
-              </Button>
-              <Button colorScheme="blue" shadow="xl" onClick={eraseAll}>
-                Erase All
-              </Button>
-              <Button colorScheme="blue" shadow="xl" onClick={reset}>
-                Reset Position
-              </Button>
-            </Stack>
-          </Flex>
-          <Flex mt={6} justifyContent="center">
-            <Button
-              colorScheme="pink"
-              shadow="xl"
-              onClick={clear}
-              variant="outline"
-            >
-              Clear
-            </Button>
-          </Flex>
 
-          <Flex justifyContent="center">
-            <Stack direction={{base: 'column', md: 'row'}}>
+          {/* Brush Controls */}
+          <Flex justifyContent='center'>
+            <Stack direction={{ base: 'column', md: 'row' }}>
               <Box>
-                <Text mt={10} fontWeight="bold" fontSize="lg" align="center">
-                  Brush Color
-                </Text>
-                <Flex mt={4} justifyContent="center">
+                <Flex mt={4} justifyContent='center'>
                   <Input
-                    aria-label="Brush Color"
-                    type="color"
+                    aria-label='Brush Color'
+                    type='color'
                     onChange={handleColor}
-                    width={16}
-                    boxSize={20}
-                    padding={2}
-                    backgroundColor="white"
+                    boxSize={10}
+                    padding={1}
+                    backgroundColor='white'
                   />
                 </Flex>
               </Box>
 
               <Box>
-                <Text mt={10} fontWeight="bold" fontSize="lg" align="center">
-                  Brush Radius
-                </Text>
-                <Flex mt={4} justifyContent="center" alignItems="center">
+                <Flex mt={4} justifyContent='center' alignItems='center'>
                   <NumberInput
-                    id="brush-radius-input"
-                    maxW="100px"
-                    mr={2}
+                    p={0}
+                    id='brush-radius-input'
+                    mr={8}
                     value={brushRadius}
                     onChange={handleBrushRadius}
                     step={0.01}
                     precision={2}
                     min={0.01}
                     max={50}
-                    backgroundColor="white"
+                    backgroundColor='white'
+                    aria-label='Brush Radius'
                   >
-                    <NumberInputField width={20} aria-label="Brush Radius" />
+                    <NumberInputField width={24} aria-label='Brush Radius' />
                     <NumberInputStepper>
                       <NumberIncrementStepper />
                       <NumberDecrementStepper />
@@ -201,20 +190,20 @@ const Draw: NextPage = () => {
                   </NumberInput>
 
                   <Slider
-                    id="brush-radius-slider"
+                    id='brush-radius-slider'
                     focusThumbOnChange={false}
                     value={brushRadius}
                     onChange={handleBrushRadiusSlider}
                     step={0.01}
                     min={0.01}
                     max={60}
-                    width={200}
+                    width={140}
                   >
-                    <SliderTrack bgColor="white">
+                    <SliderTrack bgColor='white'>
                       <SliderFilledTrack />
                     </SliderTrack>
-                    <SliderThumb aria-label="Brush Radius" p={5}>
-                      <Text fontSize="sm">{brushRadius}</Text>
+                    <SliderThumb aria-label='Brush Radius' p={5}>
+                      <Text fontSize='sm'>{brushRadius}</Text>
                     </SliderThumb>
                   </Slider>
                 </Flex>
@@ -222,16 +211,57 @@ const Draw: NextPage = () => {
             </Stack>
           </Flex>
 
-          <Flex mt={10} justifyContent="center">
+          {/* Canvas Controls */}
+          <Flex justifyContent='center'>
+            <Stack mt={6} direction='row' spacing={4}>
+              <Button colorScheme='blue' shadow='xl' onClick={undo}>
+                Undo
+              </Button>
+              <Button colorScheme='blue' shadow='xl' onClick={eraseAll}>
+                Erase All
+              </Button>
+              <Button colorScheme='blue' shadow='xl' onClick={reset}>
+                Reset Position
+              </Button>
+            </Stack>
+          </Flex>
+          <Flex mt={6} justifyContent='center'>
             <Button
-              isLoading={submitting}
-              type="submit"
-              shadow="xl"
-              colorScheme="green"
-              mb={10}
+              colorScheme='pink'
+              shadow='xl'
+              onClick={clear}
+              variant='outline'
             >
-              Save To Gallery
+              Clear
             </Button>
+          </Flex>
+          <Flex mt={10} justifyContent='center'>
+            {isLoggedIn ? (
+              <Button
+                isLoading={submitting}
+                type='submit'
+                shadow='xl'
+                colorScheme='green'
+                mb={10}
+              >
+                Save To Gallery
+              </Button>
+            ) : (
+              <Button
+                isLoading={submitting}
+                type='submit'
+                shadow='xl'
+                colorScheme='yellow'
+                mb={10}
+              >
+                <Link
+                  _hover={{ textDecoration: 'none' }}
+                  href='/api/auth/login'
+                >
+                  Login to save
+                </Link>
+              </Button>
+            )}
           </Flex>
         </form>
       </Box>
